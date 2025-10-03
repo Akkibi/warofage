@@ -27,16 +27,11 @@ export interface CharacterStatsType {
   speed: number;
   xp: number;
   money: number;
+  isDistance: boolean;
+  quantity: number;
 }
 
-export type CharacterType =
-  | 'Tank'
-  | 'Assassin'
-  | 'Archer'
-  | 'Mage'
-  | 'Bruiser'
-  | 'Scout'
-  | 'Guardian';
+export type CharacterType = 'Tank' | 'Assassin' | 'Archer' | 'Mage' | 'Bruiser';
 
 export type CharacterListStatsType = {
   [key in CharacterType]: CharacterStatsType;

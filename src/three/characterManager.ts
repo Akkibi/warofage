@@ -2,18 +2,26 @@ import * as THREE from 'three';
 
 import { Character } from './character';
 import { eventEmitter } from '../utils/eventEmitter';
-import { globals } from '../globals';
+import { Enemy } from '../enemy';
+import { Player } from '../player';
 
-import type { CharacterType } from '../types';
+import type { CharacterType, Era } from '../types';
 
 export class CharacterManager {
   private static instance: CharacterManager;
   private scene: THREE.Scene;
   private group: THREE.Group;
-  public characterList: Character[] = [];
+  public allyCharacterList: Character[] = [];
+  public enemyCharacterList: Character[] = [];
   private count: number = 0;
+  private allyCumulativeTime: number = 0;
+  private enemyCumulativeTime: number = 100;
+  private enemy: Enemy;
+  private player: Player;
 
   private constructor(scene: THREE.Scene) {
+    this.enemy = Enemy.getInstance(this.enemyCharacterList);
+    this.player = Player.getInstance();
     this.scene = scene;
     this.group = new THREE.Group();
     this.scene.add(this.group);
@@ -21,6 +29,10 @@ export class CharacterManager {
       'create-character',
       (type: CharacterType, isAlly: boolean) => this.addCharacter(type, isAlly)
     );
+
+    for (let i = 0; i < 10; i++) {
+      this.addCharacter('Assassin', true);
+    }
   }
 
   public static getInstance(scene: THREE.Scene) {
@@ -31,22 +43,46 @@ export class CharacterManager {
   }
 
   public addCharacter(type: CharacterType, isAlly: boolean) {
-    const era = globals.player.era;
+    const era: Era = 'Iron Age';
     const character = new Character(
       this.count,
       this.scene,
       type,
       era,
       isAlly,
-      this.characterList
+      this.allyCharacterList,
+      this.enemyCharacterList
     );
-    this.characterList.push(character);
+    if (isAlly) {
+      this.allyCharacterList.push(character);
+    } else {
+      this.enemyCharacterList.push(character);
+    }
     this.count++;
   }
 
   public update(deltatime: number) {
-    this.characterList.forEach((character) => {
-      character.update(deltatime);
+    this.allyCumulativeTime += deltatime;
+    this.enemyCumulativeTime += deltatime;
+    if (this.allyCumulativeTime > 200) {
+      // console.log('ally', deltatime, this.allyCumulativeTime);
+      this.allyCharacterList.forEach((character) => {
+        character.update(this.allyCumulativeTime);
+      });
+      this.allyCumulativeTime = 0;
+    }
+    if (this.enemyCumulativeTime > 200) {
+      this.enemy.tick(this.enemyCumulativeTime);
+      this.enemyCharacterList.forEach((character) => {
+        character.update(this.enemyCumulativeTime);
+      });
+      this.enemyCumulativeTime = 0;
+    }
+    this.allyCharacterList.forEach((character) => {
+      character.step(deltatime);
+    });
+    this.enemyCharacterList.forEach((character) => {
+      character.step(deltatime);
     });
   }
 }

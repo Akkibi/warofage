@@ -12,11 +12,17 @@ export class TurretManager {
   private scene: THREE.Scene;
   private turretList: Turret[] = [];
   private turretSpotsList: THREE.PolarGridHelper[] = [];
-  private characterList: Character[];
+  private allyCharacterList: Character[];
+  private enemyCharacterList: Character[];
 
-  private constructor(scene: THREE.Scene, characterList: Character[]) {
+  private constructor(
+    scene: THREE.Scene,
+    allyCharacterList: Character[],
+    enemyCharacterList: Character[]
+  ) {
     this.scene = scene;
-    this.characterList = characterList;
+    this.allyCharacterList = allyCharacterList;
+    this.enemyCharacterList = enemyCharacterList;
 
     this.initSpots();
     eventEmitter.on('create-turret', this.createTurret.bind(this));
@@ -25,16 +31,25 @@ export class TurretManager {
   private createTurret(type: TurretType, isAlly: boolean) {
     if (this.turretSpotsList.length <= 0) return;
     const goodSpot = this.turretSpotsList.find(
-      (spot) => spot.userData.isTaken === false
+      (spot) =>
+        spot.userData.isTaken === false && spot.userData.isAlly === isAlly
     );
     console.log('goodSpot', goodSpot);
     if (!goodSpot) return;
     this.addTurret(type, goodSpot, isAlly);
   }
 
-  public static getInstance(scene: THREE.Scene, characterList: Character[]) {
+  public static getInstance(
+    scene: THREE.Scene,
+    allyCharacterList: Character[],
+    enemyCharacterList: Character[]
+  ) {
     if (!TurretManager.instance) {
-      TurretManager.instance = new TurretManager(scene, characterList);
+      TurretManager.instance = new TurretManager(
+        scene,
+        allyCharacterList,
+        enemyCharacterList
+      );
     }
     return TurretManager.instance;
   }
@@ -71,7 +86,13 @@ export class TurretManager {
     isAlly: boolean
   ) {
     this.turretList.push(
-      new Turret(name, position, this.characterList, isAlly, this.scene)
+      new Turret(
+        name,
+        position,
+        isAlly ? this.enemyCharacterList : this.allyCharacterList,
+        isAlly,
+        this.scene
+      )
     );
   }
 

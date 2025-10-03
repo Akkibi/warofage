@@ -4,6 +4,7 @@ import type { Character } from './character';
 
 export class HealthBar {
   private scene: THREE.Scene;
+  private loadBar: THREE.Mesh;
   private mesh: THREE.Mesh;
   private character: Character;
 
@@ -15,16 +16,36 @@ export class HealthBar {
       new THREE.PlaneGeometry(0.2, 0.02),
       new THREE.MeshBasicMaterial({ color: color })
     );
-    this.mesh.position.y = 0.5;
+    this.mesh.position.y = 0.3;
     this.mesh.position.z = 0;
     this.mesh.castShadow = false;
     this.scene.add(this.mesh);
     this.mesh.visible = false;
+
+    this.loadBar = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.2, 0.005),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    this.loadBar.position.y = 0.285;
+    this.loadBar.position.z = 0;
+    this.loadBar.castShadow = false;
+    this.scene.add(this.loadBar);
+
+    (this.loadBar.material as THREE.MeshBasicMaterial).transparent = true;
+    (this.loadBar.material as THREE.MeshBasicMaterial).opacity = 0.25;
+    this.loadBar.visible = false;
   }
 
-  public updatePosition() {
-    this.mesh.position.x = this.character.getPosition().x;
-    this.mesh.position.z = this.character.getPosition().z;
+  public updateLoad(load: number) {
+    if (!this.loadBar.visible) this.loadBar.visible = true;
+    this.loadBar.scale.x = 1 - load;
+  }
+
+  public updatePosition(position: THREE.Vector3) {
+    this.mesh.position.x = position.x;
+    this.mesh.position.z = position.z;
+    this.loadBar.position.x = position.x;
+    this.loadBar.position.z = position.z;
   }
 
   public setHealth(health: number) {
@@ -34,5 +55,6 @@ export class HealthBar {
 
   public destroy() {
     this.scene.remove(this.mesh);
+    this.scene.remove(this.loadBar);
   }
 }

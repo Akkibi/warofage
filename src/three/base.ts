@@ -1,18 +1,27 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { eventEmitter } from '../utils/eventEmitter';
 
 import type { Era } from '../types';
 
 // states of history ages
+const environementMesh: Record<Era, string> = {
+  'Stone Age': '/models/environement/stone_age.glb',
+  'Iron Age': '/models/environement/iron_age.glb',
+  'Medieval Era': '/models/environement/medieval_era.glb',
+  'Modern Era': '/models/environement/modern_era.glb',
+  'Post Modern Era': '/models/environement/post_modern_era.glb',
+};
 
 // base is the respresantation of a clan in the game can have 3 types of building state
 export class Base {
   private scene: THREE.Scene;
   private baseGroup: THREE.Group;
   private era: Era;
-  private mesh: THREE.Mesh | null;
+  private mesh: THREE.Object3D | null;
   private isAlly: boolean;
+  private loader: GLTFLoader;
 
   constructor(scene: THREE.Scene, isAlly: boolean) {
     this.mesh = null;
@@ -20,67 +29,39 @@ export class Base {
     this.isAlly = isAlly;
     this.baseGroup = new THREE.Group();
     this.scene.add(this.baseGroup);
-    if (isAlly) {
-      this.baseGroup.position.set(-5.5, 0.4, 0);
-    } else {
-      this.baseGroup.position.set(5.5, 0.4, 0);
-    }
+    this.baseGroup.scale.multiplyScalar(0.5);
+    this.baseGroup.scale.x *= isAlly ? -1 : 1;
     this.era = 'Stone Age';
-    this.updateEra('Stone Age');
+    this.loader = new GLTFLoader();
 
-    eventEmitter.on('base-attack', (isToAlly: boolean, amount: number) => {
-      if (isToAlly === this.isAlly) {
-        this.attack(amount);
-      }
-    });
-    eventEmitter.on('base-update-era', (era: Era) => {
-      this.updateEra(era);
+    this.updateEra('Stone Age', isAlly);
+
+    eventEmitter.on('base-update-era', (era: Era, isAlly: boolean) => {
+      this.updateEra(era, isAlly);
     });
   }
 
-  private attack(amount: number) {
-    console.log((this.isAlly ? 'ally' : 'enemy') + ' attacked by ' + amount);
-  }
-
-  updateEra(era: Era) {
+  updateEra(era: Era, isAlly: boolean) {
+    if (this.isAlly !== isAlly) return;
     this.era = era;
+
     if (this.mesh) {
       this.baseGroup.remove(this.mesh);
+      this.mesh = null;
     }
-    switch (this.era) {
-      case 'Stone Age':
-        this.mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0x00ff00 })
-        );
 
-        break;
-      case 'Iron Age':
-        this.mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0x0000ff })
-        );
-        break;
-      case 'Medieval Era':
-        this.mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0xff0000 })
-        );
-        break;
-      case 'Modern Era':
-        this.mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0x00ffff })
-        );
-        break;
-      case 'Post Modern Era':
-        this.mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({ color: 0xff00ff })
-        );
-        break;
-    }
-    this.baseGroup.add(this.mesh);
+    const path = environementMesh[this.era];
+    this.loader.load(
+      path,
+      (gltf) => {
+        this.mesh = gltf.scene;
+        this.baseGroup.add(this.mesh);
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading model:', error);
+      }
+    );
   }
 
   getObject() {

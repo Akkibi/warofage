@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { lerp } from 'three/src/math/MathUtils.js';
 
-class Camera {
+export class Camera {
   private static instance: Camera; // must be static
   private cameraGroup: THREE.Group;
   private camera: THREE.PerspectiveCamera;
@@ -73,5 +73,3 @@ class Camera {
     return Camera.instance;
   }
 }
-
-export { Camera };
