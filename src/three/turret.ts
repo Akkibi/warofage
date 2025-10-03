@@ -48,6 +48,8 @@ export class Turret {
     this.closestEnemy = null;
     this.randomFightDelay = 0;
 
+    console.log('create turret', this.name, this.isAlly);
+
     const color =
       name === 'Simple' ? 0xffff00 : name === 'Double' ? 0x0000ff : 0xff0000;
     this.mesh = new THREE.Mesh(

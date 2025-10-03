@@ -162,6 +162,7 @@ export class Character {
     // console.log('setActive', this.id);
     (this.sizeIndicator.material as THREE.MeshBasicMaterial).opacity = 1;
     (this.attackSizeIndicator.material as THREE.MeshBasicMaterial).opacity = 1;
+    console.log(this.isHover);
   };
 
   private updatePosition() {

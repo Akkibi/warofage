@@ -45,17 +45,6 @@ const UiElements = () => {
     eventEmitter.trigger('create-turret', [name, true]);
   };
 
-  const handleCreateEnemyTurret = (name: TurretType) => {
-    eventEmitter.trigger('create-turret', [name, false]);
-  };
-
-  const handleCreateEnemyCharacter = (name: CharacterType) => {
-    for (let i = 0; i < 2; i++) {
-      eventEmitter.trigger('create-character', [name, false]);
-    }
-    console.log('create enemy character');
-  };
-
   const handleEvolve = () => {
     eventEmitter.trigger('evolve', [true, 'Iron age']);
   };

@@ -22,6 +22,7 @@ export class CharacterManager {
   private constructor(scene: THREE.Scene) {
     this.enemy = Enemy.getInstance(this.enemyCharacterList);
     this.player = Player.getInstance();
+    console.log(this.player);
     this.scene = scene;
     this.group = new THREE.Group();
     this.scene.add(this.group);

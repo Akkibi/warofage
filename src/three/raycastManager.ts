@@ -29,6 +29,7 @@ export class RaycastManager {
   }
 
   public click(e: MouseEvent) {
+    console.log('click', e, this.clickObject);
     // this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     // this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     // if (this.hoverIntersects.length > 0) {

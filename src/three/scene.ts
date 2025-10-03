@@ -33,6 +33,7 @@ export class SceneManager {
       this.characterManager.enemyCharacterList
     );
     this.canvas = canvas;
+    console.log('canvas', this.canvas);
 
     const ally = new Base(this.scene, true);
     const enemy = new Base(this.scene, false);
