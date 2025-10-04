@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { lerp } from 'three/src/math/MathUtils.js';
 
+import { eventEmitter } from '../utils/eventEmitter';
+
 export class Camera {
   private static instance: Camera; // must be static
   private cameraGroup: THREE.Group;
@@ -34,6 +36,7 @@ export class Camera {
       target: 0,
     };
     window.addEventListener('wheel', this.handleScroll);
+    eventEmitter.on('camera-scroll', this.handleScroll);
   }
 
   private handleScroll = (e: WheelEvent) => {

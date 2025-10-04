@@ -17,6 +17,10 @@ type Store = {
   setEnemyMoney: (n: number) => void;
   setEnemyXp: (n: number) => void;
   setEnemyEra: (n: number) => void;
+  isMenuOpen: boolean;
+  setIsMenuOpen: (n: boolean) => void;
+  isGamePaused: boolean;
+  setIsGamePaused: (n: boolean) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -36,4 +40,8 @@ export const useStore = create<Store>((set) => ({
   setEnemyMoney: (n: number) => set({ enemyMoney: n }),
   setEnemyXp: (n: number) => set({ enemyXp: n }),
   setEnemyEra: (n: number) => set({ enemyEra: n }),
+  isMenuOpen: false,
+  setIsMenuOpen: (n: boolean) => set({ isMenuOpen: n }),
+  isGamePaused: false,
+  setIsGamePaused: (n: boolean) => set({ isGamePaused: n }),
 }));

@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { gsap } from 'gsap';
 
 import { cn } from './utils/cn';
-import { eventEmitter } from './utils/eventEmitter';
+import { useStore } from './store';
 
 export const PauseButton = ({ className }: { className?: string }) => {
-  const [isPaused, setIsPaused] = useState(false);
+  const setIsGamePaused = useStore((s) => s.setIsGamePaused);
+  const isPaused = useStore((s) => s.isGamePaused);
 
-  const handlePause = () => {
-    eventEmitter.trigger('pause-game', [!isPaused]);
-    setIsPaused(!isPaused);
-  };
+  useEffect(() => {
+    if (isPaused) {
+      gsap.globalTimeline.pause();
+    } else {
+      gsap.globalTimeline.play();
+    }
+    console.log('isPaused', isPaused, gsap.globalTimeline.paused());
+  }, [isPaused]);
 
   return (
     <>
@@ -19,7 +25,7 @@ export const PauseButton = ({ className }: { className?: string }) => {
           'h-10 w-10 bg-blue-900 text-white flex justify-center items-center',
           className
         )}
-        onClick={handlePause}
+        onClick={() => setIsGamePaused(!isPaused)}
       >
         {isPaused ? (
           <svg

@@ -11,9 +11,11 @@ export const UiGroup = ({ children, title, className }: Props) => {
     <div className='flex flex-col'>
       <div className='bg-blue-950 relative'>
         <div className='p-1 absolute w-full h-full'>
-          <div className='bg-[url(https://typographyfall2017.wordpress.com/wp-content/uploads/2017/11/bodoni-ornaments-c2a3-modified-03.png)] w-full h-full bg-contain bg-no-repeat bg-right opacity-20'></div>
+          <div className='bg-[url(https://typographyfall2017.wordpress.com/wp-content/uploads/2017/11/bodoni-ornaments-c2a3-modified-03.png)] w-full h-full bg-contain bg-no-repeat bg-right opacity-30'></div>
         </div>
-        <p className='text-sm px-5 py-1 text-blue-400 font-bold'>{title}</p>
+        <p className='text-xs md:text-sm px-3 py-1 text-blue-400 font-bold relative z-10'>
+          {title}
+        </p>
       </div>
       <div
         className={cn(

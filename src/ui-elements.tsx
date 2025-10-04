@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { eventEmitter } from './utils/eventEmitter';
 import { charactersStats, eraStats, turretStats } from './staticData';
 import { UiGroup } from './ui-group';
@@ -24,6 +26,14 @@ const UiElements = () => {
   const enemyMoney = useStore((s) => s.enemyMoney);
   const enemyXp = useStore((s) => s.enemyXp);
   const playerEra = useStore((s) => s.playerEra);
+  const setIsMenuOpen = useStore((s) => s.setIsMenuOpen);
+  const setIsGamePaused = useStore((s) => s.setIsGamePaused);
+  useEffect(() => {
+    if (playerHealth <= 0 || enemyHealth <= 0) {
+      setIsMenuOpen(true);
+      setIsGamePaused(true);
+    }
+  }, [playerHealth, enemyHealth, setIsMenuOpen, setIsGamePaused]);
 
   const handleCreateCharacter = (
     name: CharacterType,
@@ -50,7 +60,7 @@ const UiElements = () => {
   };
   return (
     <>
-      <div className='absolute top-25 left-1 md:left-5 bg-black/50 h-fit p-[2px] w-fit'>
+      <div className='absolute top-25 right-1 md:right-5 bg-black/50 h-fit p-[2px] w-fit'>
         <UiGroup title='options' className='w-full max-w-full'>
           <div className='flex flex-col gap-1'>
             <FullscreenButton className='w-full' />
@@ -75,6 +85,21 @@ const UiElements = () => {
           </div>
         </div>
       )}
+      {enemyHealth <= 0 && (
+        <div className='absolute inset-0 z-50 bg-black/50 flex justify-center items-center'>
+          <div className='w-fit h-fit bg-black/50 p-[2px] text-nowrap'>
+            <UiGroup title='End'>
+              <div className='p-5 flex flex-col justify-center items-center gap-5'>
+                <p className='text-3xl font-bold text-white w-full text-center p-5'>
+                  You Win
+                </p>
+                <p className='text-white'>You did try hard enough !!</p>
+                <Button onClick={() => {}}>Play again</Button>
+              </div>
+            </UiGroup>
+          </div>
+        </div>
+      )}
       <h1 className='text-white text-2xl font-black absolute bottom-5 right-5'>
         War of Ages
         {enemyXp}
@@ -83,12 +108,12 @@ const UiElements = () => {
       <div className='absolute top-1 right-1 left-1 md:top-5 md:left-5 md:right-5 flex flex-rox gap-[2px] p-[2px] h-10 bg-black/50'>
         <div className='bg-blue-950/50 border-blue-900/50 border-2 p-1 flex-1'>
           <div className='bg-blue-950 relative h-full flex-1'>
-            <span className='absolute left-1 -bottom-8 z-10'>
+            <span className='absolute left-1 -bottom-8 z-10 text-xs'>
               {playerHealth}/1000
             </span>
             <div
               style={{
-                transform: `scaleX(${playerHealth / 1000})`,
+                transform: `scaleX(${Math.max(playerHealth / 1000, 0)})`,
               }}
               className='absolute top-0 left-0 bottom-0 w-full bg-blue-500 origin-left transition-all duration-75 ease-out'
             ></div>
@@ -96,13 +121,13 @@ const UiElements = () => {
         </div>
         <div className='bg-red-950/50 border-red-900/50 border-2 p-1 flex-1'>
           <div className='bg-red-950 relative h-full flex-1'>
-            <span className='absolute right-1 -bottom-8 z-10'>
+            <span className='absolute right-1 -bottom-8 z-10 text-xs'>
               {enemyHealth}/1000
             </span>
             <div
               className='absolute top-0 right-0 bottom-0 w-full bg-red-500 origin-right transition-all duration-75 ease-out'
               style={{
-                transform: `scaleX(${enemyHealth / 1000})`,
+                transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
               }}
             ></div>
           </div>

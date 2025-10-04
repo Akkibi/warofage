@@ -45,7 +45,7 @@ export const charactersStats: CharacterListStatsType = {
   },
   Archer: {
     size: 0.05,
-    health: 90, // reduced from 120
+    health: 40, // reduced from 120
     attack: 12, // reduced from 15
     attackSpeed: 1.6,
     attackRange: 1,
