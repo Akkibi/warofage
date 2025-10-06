@@ -60,9 +60,9 @@ const UiElements = () => {
   };
   return (
     <>
-      <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
+      <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50 bg-center'></div>
       <div className='bottom-0 left-0 h-[25vh] w-[25vh] bg-[url(/corner.svg)] absolute z-0 bg-no-repeat bg-cover select-none pointer-events-none'></div>
-      <div className='absolute top-14 md:top-25 right-1 md:right-5 bg-black/70 h-fit p-[2px] w-fit'>
+      <div className='absolute top-14 lg:top-25 right-1 lg:right-5 bg-black/70 h-fit p-[2px] w-fit'>
         <UiGroup title='options' className='w-full max-w-full'>
           <div className='flex flex-col gap-1 p-1'>
             <FullscreenButton className='w-full' />
@@ -71,8 +71,7 @@ const UiElements = () => {
         </UiGroup>
       </div>
       {playerHealth <= 0 && (
-        <div className='absolute inset-0 z-50 bg-black/50 flex justify-center items-center'>
-          <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
+        <div className='absolute inset-0 z-50 bg-black/70 flex justify-center items-center'>
           <div className='w-fit h-fit bg-black/50 p-[2px] text-nowrap'>
             <UiGroup title='End' ornament>
               <div className='p-5 flex flex-col justify-center items-center gap-5'>
@@ -91,8 +90,7 @@ const UiElements = () => {
         </div>
       )}
       {enemyHealth <= 0 && (
-        <div className='absolute inset-0 z-50 bg-black/50 flex justify-center items-center'>
-          <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
+        <div className='absolute inset-0 z-50 bg-black/70 flex justify-center items-center'>
           <div className='w-fit h-fit bg-black/50 p-[2px] text-nowrap'>
             <UiGroup title='End' ornament>
               <div className='p-5 flex flex-col justify-center items-center gap-5'>
@@ -115,27 +113,39 @@ const UiElements = () => {
           <br />$ {enemyMoney}
         </span>
       </h1>
-      <div className='absolute top-1 right-1 left-1 md:top-5 md:left-5 md:right-5 flex flex-rox gap-[2px] p-[2px] h-6 md:h-10 bg-black/50'>
+      <div className='absolute top-1 right-1 left-1 lg:top-5 lg:left-5 lg:right-5 flex flex-rox gap-[2px] p-[2px] h-6 lg:h-10 bg-black/50'>
         <div className='bg-cyan-950/50 border-cyan-900/50 border-2 p-1 flex-1'>
           <div className='bg-cyan-950 relative h-full flex-1'>
             <span className='absolute left-1 -bottom-8 z-10 text-xs'>
-              {playerHealth}/1000
+              {playerHealth} / 1000
             </span>
+            <div
+              className='absolute top-0 right-0 bottom-0 w-full bg-white origin-left transition-all duration-75 ease-out'
+              style={{
+                transform: `scaleX(${Math.max(playerHealth / 1000, 0)})`,
+              }}
+            ></div>
             <div
               style={{
                 transform: `scaleX(${Math.max(playerHealth / 1000, 0)})`,
               }}
-              className='absolute top-0 left-0 bottom-0 w-full bg-cyan-500 origin-left transition-all duration-75 ease-out'
+              className='absolute top-0 left-0 bottom-0 w-full bg-cyan-500 origin-left'
             ></div>
           </div>
         </div>
         <div className='bg-pink-950/50 border-pink-900/50 border-2 p-1 flex-1'>
           <div className='bg-pink-950 relative h-full flex-1'>
             <span className='absolute right-1 -bottom-8 z-10 text-xs'>
-              {enemyHealth}/1000
+              {enemyHealth} / 1000
             </span>
             <div
-              className='absolute top-0 right-0 bottom-0 w-full bg-pink-500 origin-right transition-all duration-75 ease-out'
+              className='absolute top-0 right-0 bottom-0 w-full bg-white origin-right transition-all duration-75 ease-out'
+              style={{
+                transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
+              }}
+            ></div>
+            <div
+              className='absolute top-0 right-0 bottom-0 w-full bg-pink-500 origin-right'
               style={{
                 transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
               }}
@@ -143,7 +153,7 @@ const UiElements = () => {
           </div>
         </div>
       </div>
-      <div className=' absolute bottom-1 left-1 md:bottom-5 md:left-5 flex flex-col gap-1'>
+      <div className=' absolute bottom-1 left-1 lg:bottom-5 lg:left-5 flex flex-col gap-1'>
         <div className='flex flex-row gap-1'>
           <div className='flex flex-row p-[2px] gap-[2px] bg-black/50 w-fit text-white'>
             <UiGroup title='XP'>
@@ -197,7 +207,7 @@ const UiElements = () => {
         <div className='flex flex-row gap-2'>
           <div className='flex flex-row p-[2px] gap-[2px] bg-black/70'>
             <UiGroup title='Create character' ornament>
-              <div className='flex flex-row gap-[2px] md:gap-2 p-[2px] md:p-1'>
+              <div className='flex flex-row gap-[2px] lg:gap-2 p-[2px] lg:p-1'>
                 {Object.entries(charactersStats).map(([name, stats]) => (
                   <Tooltip
                     text={'$' + stats.money}
@@ -217,7 +227,7 @@ const UiElements = () => {
               </div>
             </UiGroup>
             <UiGroup title='Create turret' ornament>
-              <div className='flex flex-row gap-[2px] md:gap-2 p-[2px] md:p-1'>
+              <div className='flex flex-row gap-[2px] lg:gap-2 p-[2px] lg:p-1'>
                 {Object.entries(turretStats).map(([name, stats]) => (
                   <Tooltip
                     text={'$' + stats.price}

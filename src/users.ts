@@ -14,7 +14,7 @@ export class User {
   constructor() {
     this.isAlly = true;
     this.money = 1000;
-    this.xp = 99000;
+    this.xp = 0;
     this.health = 1000;
     this.era = 0;
     this.baseDefense = 100;
@@ -53,7 +53,7 @@ export class User {
       this.isAlly,
       Math.round((stats.money / stats.quantity) * 1.1 + this.money)
     );
-    this.setXp(this.xp + stats.xp);
+    this.setXp(Math.round(stats.xp / stats.quantity + this.xp));
   };
 
   protected setXp = (newNumber: number) => {

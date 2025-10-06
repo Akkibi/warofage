@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 import { turretStats } from '../staticData';
 
@@ -18,7 +19,7 @@ export class Turret {
   private name: TurretType;
   private characterList: Character[];
   private group: THREE.Group;
-  private mesh: THREE.Mesh;
+  private mesh: THREE.Mesh | null;
   private enemyTarget: Character | null;
   private defaultPosition: THREE.Vector3;
   private currentTargetPosition: THREE.Vector3;
@@ -50,17 +51,11 @@ export class Turret {
 
     console.log('create turret', this.name, this.isAlly);
 
-    const color =
-      name === 'Simple' ? 0xffff00 : name === 'Double' ? 0x0000ff : 0xff0000;
-    this.mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(0.1, 0.1, 0.5),
-      new THREE.MeshStandardMaterial({ color: color })
-    );
     this.group = new THREE.Group();
     this.group.position.copy(this.positionReference.position);
     this.group.position.y += 0.2;
-
-    this.group.add(this.mesh);
+    this.mesh = null;
+    this.generateMesh();
     this.scene.add(this.group);
     const defaultPosition = new THREE.Vector3();
     this.group.getWorldPosition(defaultPosition);
@@ -106,6 +101,30 @@ export class Turret {
     this.scene.add(turretHolder);
 
     this.positionReference.userData.isTaken = true;
+  }
+
+  private generateMesh() {
+    const gltfLoader = new GLTFLoader();
+    const color =
+      this.name === 'Simple'
+        ? 0xff0000
+        : this.name === 'Double'
+          ? 0xffff00
+          : 0x0000ff;
+    // this.mesh = new THREE.Mesh(
+    //   new THREE.BoxGeometry(0.1, 0.1, 0.5),
+    //   new THREE.MeshStandardMaterial({ color: color })
+    // );
+    gltfLoader.load('/models/turret/turret.glb', (gltf) => {
+      console.warn('gltf.scene', gltf.scene.children[0]);
+      this.mesh = gltf.scene.children[0] as THREE.Mesh;
+      this.mesh.position.set(0, 0, 0);
+      this.mesh.castShadow = false;
+      this.mesh.receiveShadow = true;
+      this.mesh.scale.multiplyScalar(0.1);
+      this.mesh.material = new THREE.MeshStandardMaterial({ color: color });
+      if (this.mesh) this.group.add(this.mesh);
+    });
   }
 
   public update(deltaTime: number) {
@@ -183,6 +202,7 @@ export class Turret {
   }
 
   private animateShoot() {
+    if (!this.mesh) return;
     gsap.fromTo(
       this.mesh.position,
       { z: -0.1 },

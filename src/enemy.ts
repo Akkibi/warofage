@@ -60,7 +60,14 @@ export class Enemy extends User {
     if (this.enemyCharacterList.length >= 150) return;
     // select random character group, if xp is > to half the next xp level, generate double the amount
     const characterGroup =
-      characterGroups[Math.floor(Math.random() * characterGroups.length)];
+      characterGroups[
+        Math.floor(
+          Math.random() *
+            (characterGroups.length -
+              (this.xp > eraStats[this.era].xp / 2 ? 0 : 1))
+        )
+      ];
+    console.log('characterGroup', characterGroup);
     characterGroup.forEach((name) => {
       eventEmitter.trigger('create-character', [name, false]);
     });

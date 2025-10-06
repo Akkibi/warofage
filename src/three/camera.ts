@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { lerp } from 'three/src/math/MathUtils.js';
 
 import { eventEmitter } from '../utils/eventEmitter';
+import { useStore } from '../store';
+
+import type { SwipeDataType } from '../utils/touchHandler';
 
 export class Camera {
   private static instance: Camera; // must be static
@@ -30,35 +33,57 @@ export class Camera {
     this.cameraGroup.rotation.y = 0;
 
     this.scroll = {
-      min: -4,
-      max: 4,
+      min: -4.2,
+      max: 4.2,
       current: 5,
       target: 0,
     };
     window.addEventListener('wheel', this.handleScroll);
-    eventEmitter.on('camera-scroll', this.handleScroll);
+    eventEmitter.on('swipeX', this.handleSwipe);
   }
 
+  private handleSwipe = (e: SwipeDataType) => {
+    this.storeScroll(e.distance * 0.01 * (e.direction === 'left' ? 1 : -1));
+  };
+
   private handleScroll = (e: WheelEvent) => {
+    this.storeScroll(e.deltaY * 0.01);
+  };
+
+  private storeScroll(amount: number) {
+    if (
+      useStore.getState().enemyHealth <= 0 ||
+      useStore.getState().playerHealth <= 0
+    )
+      return;
     if (
       this.scroll.target < this.scroll.min - 2 ||
       this.scroll.target > this.scroll.max + 2
     )
       return;
-    this.scroll.target += e.deltaY * 0.01;
-  };
-
-  public animate() {
-    // this.cameraGroup.position.x = Math.sin(Date.now() / 1000) * 1;
-
+    this.scroll.target += amount;
+  }
+  public animate(deltaTime: number) {
     if (this.scroll.target < this.scroll.min) {
-      this.scroll.target = lerp(this.scroll.target, this.scroll.min, 0.1);
+      this.scroll.target = lerp(
+        this.scroll.target,
+        this.scroll.min,
+        0.01 * deltaTime
+      );
     } else if (this.scroll.target > this.scroll.max) {
-      this.scroll.target = lerp(this.scroll.target, this.scroll.max, 0.1);
+      this.scroll.target = lerp(
+        this.scroll.target,
+        this.scroll.max,
+        0.01 * deltaTime
+      );
     }
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, 0.1);
     this.cameraGroup.position.x = this.scroll.current;
-    // this.camera.position.y = Math.cos(Date.now() / 1000) * 1;
+
+    const distanceFromTarget = this.cameraGroup.position.x - this.scroll.target;
+    const newFov = 25 + Math.abs(distanceFromTarget) * 3;
+    this.camera.fov = lerp(this.camera.fov, newFov, 0.01 * deltaTime);
+    this.camera.updateProjectionMatrix();
   }
 
   public getCamera() {

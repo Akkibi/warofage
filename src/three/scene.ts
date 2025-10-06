@@ -5,6 +5,8 @@ import { Camera } from './camera';
 import { Base } from './base';
 import { CharacterManager } from './characterManager';
 import { TurretManager } from './turretManager';
+import { useStore } from '../store';
+import { PointerHandler } from '../utils/touchHandler';
 // import { RaycastManager } from './raycastManager';
 
 export class SceneManager {
@@ -16,6 +18,7 @@ export class SceneManager {
   private characterManager: CharacterManager;
   private turretManager: TurretManager;
   private bases: Base[] = [];
+  private pointerHandler: PointerHandler;
   // private rayCastManager: RaycastManager;
 
   private constructor(canvas: HTMLDivElement) {
@@ -26,6 +29,12 @@ export class SceneManager {
     //   this.scene,
     //   this.camera.getCamera()
     // );
+    this.pointerHandler = new PointerHandler(canvas, {
+      swipeThreshold: 50,
+      tapMaxDuration: 300,
+      tapMaxMovement: 10,
+    });
+    console.log('pointerHandler', this.pointerHandler);
     this.characterManager = CharacterManager.getInstance(this.scene);
     this.turretManager = TurretManager.getInstance(
       this.scene,
@@ -51,7 +60,7 @@ export class SceneManager {
     // sun light
 
     const sunLight = new THREE.DirectionalLight(0xffffee, 4);
-    sunLight.position.set(1, 1, -1);
+    sunLight.position.set(2, 4, 1);
     sunLight.lookAt(new THREE.Vector3(0, 0, 0));
     sunLight.castShadow = true;
     sunLight.shadow.camera.near = -2; // default
@@ -62,6 +71,10 @@ export class SceneManager {
 
     // hook GSAP ticker instead of setAnimationLoop
     gsap.ticker.add((_time, deltatime) => this.animate(deltatime));
+    gsap.ticker.add((_time, deltatime) => this.camera.animate(deltatime));
+    gsap.ticker.add(() => {
+      this.renderer.render(this.scene, this.camera.getCamera());
+    });
     window.addEventListener('resize', this.resize.bind(this));
 
     this.init(canvas);
@@ -100,10 +113,10 @@ export class SceneManager {
   }
 
   private animate(deltatime: number) {
+    if (useStore.getState().isGamePaused) return;
     const deltaTime = deltatime * 2.0;
     // put per-frame logic here (object updates, controls, etc.)
-    this.camera.animate();
-    this.renderer.render(this.scene, this.camera.getCamera());
+    // this.renderer.render(this.scene, this.camera.getCamera());
     this.characterManager.update(deltaTime);
     this.turretManager.update(deltaTime);
   }

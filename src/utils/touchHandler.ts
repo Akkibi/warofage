@@ -1,142 +1,159 @@
-// import { eventEmitter } from './eventEmitter';
+import { eventEmitter } from './eventEmitter';
 
-// interface TouchPosition {
-//   x: number;
-//   y: number;
-// }
+interface PointerHandlerConfig {
+  swipeThreshold?: number;
+  tapMaxDuration?: number;
+  tapMaxMovement?: number;
+}
 
-// class TouchHandler {
-//   private static instance: TouchHandler;
-//   private startPos: TouchPosition | null = null;
-//   private lastPos: TouchPosition | null = null;
-//   private isDragging: boolean = false;
-//   private dragThreshold: number = 5; // minimum pixels to trigger drag
+export interface SwipeDataType {
+  direction: 'left' | 'right' | 'up' | 'down';
+  distance: number;
+  duration: number;
+  originalEvent: MouseEvent | TouchEvent;
+}
 
-//   private constructor() {
-//     // Private constructor for singleton
-//   }
+interface PointerStartData {
+  x: number;
+  y: number;
+  time: number;
+}
 
-//   public static getInstance(): TouchHandler {
-//     if (!TouchHandler.instance) {
-//       TouchHandler.instance = new TouchHandler();
-//     }
-//     return TouchHandler.instance;
-//   }
+export class PointerHandler {
+  private config: Required<PointerHandlerConfig>;
+  private pointerStart: PointerStartData | null = null;
+  private element: HTMLElement;
 
-//   public initialize(): void {
-//     this.attachListeners();
-//   }
+  constructor(element: HTMLElement, config: PointerHandlerConfig = {}) {
+    this.element = element;
 
-//   private attachListeners(): void {
-//     document.addEventListener('touchstart', this.handleTouchStart.bind(this), {
-//       passive: false,
-//     });
-//     document.addEventListener('touchmove', this.handleTouchMove.bind(this), {
-//       passive: false,
-//     });
-//     document.addEventListener('touchend', this.handleTouchEnd.bind(this), {
-//       passive: false,
-//     });
-//     document.addEventListener('touchcancel', this.handleTouchEnd.bind(this), {
-//       passive: false,
-//     });
-//   }
+    // Default configuration
+    this.config = {
+      swipeThreshold: config.swipeThreshold ?? 50,
+      tapMaxDuration: config.tapMaxDuration ?? 300,
+      tapMaxMovement: config.tapMaxMovement ?? 10,
+    };
 
-//   private handleTouchStart(e: TouchEvent): void {
-//     const touch = e.touches[0];
-//     this.startPos = { x: touch.clientX, y: touch.clientY };
-//     this.lastPos = { ...this.startPos };
-//     this.isDragging = false;
-//   }
+    this.init();
+  }
 
-//   private handleTouchMove(e: TouchEvent): void {
-//     if (!this.startPos || !this.lastPos) return;
+  private init(): void {
+    // Mouse events
+    this.element.addEventListener('mousedown', this.handleStart);
+    this.element.addEventListener('mouseup', this.handleEnd);
+    this.element.addEventListener('mouseleave', this.handleCancel);
 
-//     const touch = e.touches[0];
-//     const currentPos = { x: touch.clientX, y: touch.clientY };
+    // Touch events
+    this.element.addEventListener('touchstart', this.handleStart);
+    this.element.addEventListener('touchend', this.handleEnd);
+    this.element.addEventListener('touchcancel', this.handleCancel);
+  }
 
-//     const deltaX = currentPos.x - this.lastPos.x;
-//     const deltaY = currentPos.y - this.lastPos.y;
+  private handleStart = (e: MouseEvent | TouchEvent): void => {
+    const point = this.getPoint(e);
+    if (!point) return;
 
-//     // Check if drag threshold is exceeded
-//     if (!this.isDragging) {
-//       const totalDelta =
-//         Math.abs(currentPos.x - this.startPos.x) +
-//         Math.abs(currentPos.y - this.startPos.y);
-//       if (totalDelta > this.dragThreshold) {
-//         this.isDragging = true;
-//       }
-//     }
+    this.pointerStart = {
+      x: point.x,
+      y: point.y,
+      time: Date.now(),
+    };
+  };
 
-//     if (this.isDragging) {
-//       // Emit drag events
-//       if (Math.abs(deltaX) > 0) {
-//         eventEmitter.trigger('touch-drag-x', {
-//           delta: deltaX,
-//           position: currentPos.x,
-//           startPosition: this.startPos.x,
-//         });
-//       }
+  private handleEnd = (e: MouseEvent | TouchEvent): void => {
+    if (!this.pointerStart) return;
 
-//       if (Math.abs(deltaY) > 0) {
-//         eventEmitter.trigger('touch-drag-y', {
-//           delta: deltaY,
-//           position: currentPos.y,
-//           startPosition: this.startPos.y,
-//         });
-//       }
-//     }
+    const point = this.getPoint(e);
+    if (!point) {
+      this.pointerStart = null;
+      return;
+    }
 
-//     this.lastPos = currentPos;
-//   }
+    const deltaX = point.x - this.pointerStart.x;
+    const deltaY = point.y - this.pointerStart.y;
+    const duration = Date.now() - this.pointerStart.time;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-//   private handleTouchEnd(e: TouchEvent): void {
-//     if (!eventEmitter || !this.startPos) return;
+    // Check for tap
+    if (
+      duration < this.config.tapMaxDuration &&
+      distance < this.config.tapMaxMovement
+    ) {
+      eventEmitter.trigger('tap', [e]);
+      this.pointerStart = null;
+      return;
+    }
 
-//     // If it wasn't a drag, emit a touch event
-//     if (!this.isDragging) {
-//       eventEmitter.trigger('touch', {
-//         x: this.startPos.x,
-//         y: this.startPos.y,
-//       });
-//     }
+    // Check for swipe
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
 
-//     // Reset state
-//     this.startPos = null;
-//     this.lastPos = null;
-//     this.isDragging = false;
-//   }
+    if (
+      absX > this.config.swipeThreshold ||
+      absY > this.config.swipeThreshold
+    ) {
+      // Determine primary swipe direction
+      if (absX > absY) {
+        // Horizontal swipe
+        const swipeData: SwipeDataType = {
+          direction: deltaX > 0 ? 'right' : 'left',
+          distance: absX,
+          duration,
+          originalEvent: e,
+        };
+        eventEmitter.trigger('swipeX', [swipeData]);
+      } else {
+        // Vertical swipe
+        eventEmitter.trigger('swipeY', [
+          {
+            direction: deltaY > 0 ? 'down' : 'up',
+            distance: absY,
+            duration,
+            originalEvent: e,
+          },
+        ]);
+      }
+    }
 
-//   public setDragThreshold(threshold: number): void {
-//     this.dragThreshold = threshold;
-//   }
+    this.pointerStart = null;
+  };
 
-//   public destroy(): void {
-//     document.removeEventListener(
-//       'touchstart',
-//       this.handleTouchStart.bind(this)
-//     );
-//     document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-//     document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-//     document.removeEventListener('touchcancel', this.handleTouchEnd.bind(this));
-//     eventEmitter = null;
-//   }
-// }
+  private handleCancel = (): void => {
+    this.pointerStart = null;
+  };
 
-// export default TouchHandler;
+  private getPoint(
+    e: MouseEvent | TouchEvent
+  ): { x: number; y: number } | null {
+    if (e instanceof MouseEvent) {
+      return { x: e.clientX, y: e.clientY };
+    } else if (e instanceof TouchEvent) {
+      const touch = e.changedTouches[0];
+      if (touch) {
+        return { x: touch.clientX, y: touch.clientY };
+      }
+    }
+    return null;
+  }
 
-// // Usage example:
-// // const touchHandler = TouchHandler.getInstance();
-// // touchHandler.initialize(myEventEmitter);
-// //
-// // myEventEmitter.on('touch', (data) => {
-// //   console.log('Touch at:', data.x, data.y);
-// // });
-// //
-// // myEventEmitter.on('touch-drag-x', (data) => {
-// //   console.log('Drag X:', data.delta);
-// // });
-// //
-// // myEventEmitter.on('touch-drag-y', (data) => {
-// //   console.log('Drag Y:', data.delta);
-// // });
+  public destroy(): void {
+    this.element.removeEventListener('mousedown', this.handleStart);
+    this.element.removeEventListener('mouseup', this.handleEnd);
+    this.element.removeEventListener('mouseleave', this.handleCancel);
+    this.element.removeEventListener('touchstart', this.handleStart);
+    this.element.removeEventListener('touchend', this.handleEnd);
+    this.element.removeEventListener('touchcancel', this.handleCancel);
+    this.pointerStart = null;
+  }
+}
+
+// Usage example:
+// const handler = new PointerHandler(document.body, eventEmitter, {
+//   swipeThreshold: 50,
+//   tapMaxDuration: 300,
+//   tapMaxMovement: 10
+// });
+//
+// eventEmitter.on('tap', (e) => console.log('Tap detected!', e));
+// eventEmitter.on('swipeX', (data) => console.log('Horizontal swipe:', data.direction));
+// eventEmitter.on('swipeY', (data) => console.log('Vertical swipe:', data.direction));

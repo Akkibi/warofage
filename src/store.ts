@@ -25,7 +25,7 @@ type Store = {
 
 export const useStore = create<Store>((set) => ({
   playerHealth: 1000,
-  playerMoney: 1000,
+  playerMoney: 10000,
   playerXp: 0,
   playerEra: 0,
   setPlayerMoney: (n: number) => set({ playerMoney: n }),

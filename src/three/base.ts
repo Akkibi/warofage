@@ -7,7 +7,7 @@ import type { Era } from '../types';
 
 // states of history ages
 const environementMesh: Record<Era, string> = {
-  'Stone Age': '/models/environement/stone_age.glb',
+  'Stone Age': '/models/environement/stone_age2.glb',
   'Iron Age': '/models/environement/iron_age.glb',
   'Medieval Era': '/models/environement/medieval_era.glb',
   'Modern Era': '/models/environement/modern_era.glb',
