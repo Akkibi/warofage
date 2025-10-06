@@ -15,7 +15,7 @@ export const Button = ({
     <button
       type='button'
       className={cn(
-        'min-h-10 md:min-h-12 px-2 md:px-4 bg-black hover:bg-lime-950 hover:scale-105 active:scale-95 text-white relative transition-all duration-100 ease-out text-xs md:text-sm',
+        'min-h-10 md:min-h-12 px-2 md:px-4 bg-black hover:bg-lime-950 hover:scale-105 active:scale-95 text-white relative transition-all duration-100 ease-out text-xs md:text-sm font-light',
         className
       )}
       onClick={onClick}

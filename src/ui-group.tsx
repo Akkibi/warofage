@@ -12,7 +12,7 @@ export const UiGroup = ({ children, title, className, ornament }: Props) => {
     <div className='flex flex-col'>
       <div className='bg-lime-400 relative'>
         {ornament && (
-          <div className='absolute inset-1 z-0 bg-[url(/bands.svg)] bg-no-repeat bg-contain bg-right opacity-20'></div>
+          <div className='absolute inset-2 z-0 bg-[url(/bands.svg)] bg-no-repeat bg-contain bg-right opacity-20'></div>
         )}
         <p className='text-xs md:text-sm px-2 py-1 text-black font-black relative z-10 alexandria uppercase '>
           {title}
