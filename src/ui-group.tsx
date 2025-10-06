@@ -4,22 +4,23 @@ interface Props {
   children: React.ReactNode;
   title: string;
   className?: string;
+  ornament?: boolean;
 }
 
-export const UiGroup = ({ children, title, className }: Props) => {
+export const UiGroup = ({ children, title, className, ornament }: Props) => {
   return (
     <div className='flex flex-col'>
-      <div className='bg-blue-950 relative'>
-        <div className='p-1 absolute w-full h-full'>
-          <div className='bg-[url(https://typographyfall2017.wordpress.com/wp-content/uploads/2017/11/bodoni-ornaments-c2a3-modified-03.png)] w-full h-full bg-contain bg-no-repeat bg-right opacity-30'></div>
-        </div>
-        <p className='text-xs md:text-sm px-3 py-1 text-blue-400 font-bold relative z-10'>
+      <div className='bg-lime-400 relative'>
+        {ornament && (
+          <div className='absolute inset-1 z-0 bg-[url(/bands.svg)] bg-no-repeat bg-contain bg-right opacity-20'></div>
+        )}
+        <p className='text-xs md:text-sm px-2 py-1 text-black font-black relative z-10 alexandria uppercase '>
           {title}
         </p>
       </div>
       <div
         className={cn(
-          'bg-blue-950/50 max-w-min p-[2px] text-black border-blue-950 border-2',
+          'bg-lime-500/50 max-w-min p-[2px] text-black border-lime-400 border-2',
           className
         )}
       >

@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap');
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /*font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+  font-family: "Alexandria", sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -36,6 +38,38 @@ body {
     inset: 0;
 }
 
-p, button {
-    text-shadow: 0px 2px 0 rgba(0, 0, 0, 0.5);
+p, button, span {
+    text-shadow: 0px 2px 0 rgba(255, 255, 255, 0.25);
 }
+
+.alexandria {
+  font-family: "Alexandria", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+
+  /*@font-face{
+    font-family: "Alexandria";
+    src: url("/fonts/Alexandria-Regular.ttf");
+  }
+  @font-face{
+    font-family: "Alexandria";
+    src: url("/fonts/Alexandria-Bold.ttf");
+    font-weight: bold;
+  }
+  @font-face{
+    font-family: "Alexandria";
+    src: url("/fonts/Alexandria-Italic.ttf");
+    font-style: italic;
+  }
+  @font-face{
+    font-family: "Alexandria";
+    src: url("/fonts/Alexandria-Light.ttf");
+    font-weight: lighter;
+  }
+  @font-face{
+    font-family: "Alexandria";
+    src: url("/fonts/Alexandria-SemiBold.ttf");
+    font-weight: 600;
+  }*/

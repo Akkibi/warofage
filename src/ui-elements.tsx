@@ -60,9 +60,11 @@ const UiElements = () => {
   };
   return (
     <>
-      <div className='absolute top-25 right-1 md:right-5 bg-black/50 h-fit p-[2px] w-fit'>
+      <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
+      <div className='bottom-0 left-0 h-[25vh] w-[25vh] bg-[url(/corner.svg)] absolute z-0 bg-no-repeat bg-cover select-none pointer-events-none'></div>
+      <div className='absolute top-14 md:top-25 right-1 md:right-5 bg-black/70 h-fit p-[2px] w-fit'>
         <UiGroup title='options' className='w-full max-w-full'>
-          <div className='flex flex-col gap-1'>
+          <div className='flex flex-col gap-1 p-1'>
             <FullscreenButton className='w-full' />
             <PauseButton className='w-full' />
           </div>
@@ -70,16 +72,19 @@ const UiElements = () => {
       </div>
       {playerHealth <= 0 && (
         <div className='absolute inset-0 z-50 bg-black/50 flex justify-center items-center'>
+          <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
           <div className='w-fit h-fit bg-black/50 p-[2px] text-nowrap'>
-            <UiGroup title='End'>
+            <UiGroup title='End' ornament>
               <div className='p-5 flex flex-col justify-center items-center gap-5'>
-                <p className='text-3xl font-bold text-white w-full text-center p-5'>
+                <p className='text-4xl font-bold text-white w-full text-center p-5'>
                   You lost
                 </p>
                 <p className='text-white'>
                   {"Mabe you didn't try hard enough"}
                 </p>
-                <Button onClick={() => {}}>Play again</Button>
+                <Button onClick={() => {}} className='w-full'>
+                  Play again
+                </Button>
               </div>
             </UiGroup>
           </div>
@@ -87,27 +92,32 @@ const UiElements = () => {
       )}
       {enemyHealth <= 0 && (
         <div className='absolute inset-0 z-50 bg-black/50 flex justify-center items-center'>
+          <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50'></div>
           <div className='w-fit h-fit bg-black/50 p-[2px] text-nowrap'>
-            <UiGroup title='End'>
+            <UiGroup title='End' ornament>
               <div className='p-5 flex flex-col justify-center items-center gap-5'>
-                <p className='text-3xl font-bold text-white w-full text-center p-5'>
+                <p className='text-4xl font-bold text-white w-full text-center p-5'>
                   You Win
                 </p>
                 <p className='text-white'>You did try hard enough !!</p>
-                <Button onClick={() => {}}>Play again</Button>
+                <Button onClick={() => {}} className='w-full'>
+                  Play again
+                </Button>
               </div>
             </UiGroup>
           </div>
         </div>
       )}
-      <h1 className='text-white text-2xl font-black absolute bottom-5 right-5'>
-        War of Ages
-        {enemyXp}
-        <br />$ {enemyMoney}
+      <h1 className='text-white text-2xl font-black absolute bottom-5 right-5 text-right'>
+        WARO FAGES
+        <span className='text-xs font-light'>
+          <br /> {enemyXp}
+          <br />$ {enemyMoney}
+        </span>
       </h1>
-      <div className='absolute top-1 right-1 left-1 md:top-5 md:left-5 md:right-5 flex flex-rox gap-[2px] p-[2px] h-10 bg-black/50'>
-        <div className='bg-blue-950/50 border-blue-900/50 border-2 p-1 flex-1'>
-          <div className='bg-blue-950 relative h-full flex-1'>
+      <div className='absolute top-1 right-1 left-1 md:top-5 md:left-5 md:right-5 flex flex-rox gap-[2px] p-[2px] h-6 md:h-10 bg-black/50'>
+        <div className='bg-cyan-950/50 border-cyan-900/50 border-2 p-1 flex-1'>
+          <div className='bg-cyan-950 relative h-full flex-1'>
             <span className='absolute left-1 -bottom-8 z-10 text-xs'>
               {playerHealth}/1000
             </span>
@@ -115,17 +125,17 @@ const UiElements = () => {
               style={{
                 transform: `scaleX(${Math.max(playerHealth / 1000, 0)})`,
               }}
-              className='absolute top-0 left-0 bottom-0 w-full bg-blue-500 origin-left transition-all duration-75 ease-out'
+              className='absolute top-0 left-0 bottom-0 w-full bg-cyan-500 origin-left transition-all duration-75 ease-out'
             ></div>
           </div>
         </div>
-        <div className='bg-red-950/50 border-red-900/50 border-2 p-1 flex-1'>
-          <div className='bg-red-950 relative h-full flex-1'>
+        <div className='bg-pink-950/50 border-pink-900/50 border-2 p-1 flex-1'>
+          <div className='bg-pink-950 relative h-full flex-1'>
             <span className='absolute right-1 -bottom-8 z-10 text-xs'>
               {enemyHealth}/1000
             </span>
             <div
-              className='absolute top-0 right-0 bottom-0 w-full bg-red-500 origin-right transition-all duration-75 ease-out'
+              className='absolute top-0 right-0 bottom-0 w-full bg-pink-500 origin-right transition-all duration-75 ease-out'
               style={{
                 transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
               }}
@@ -148,7 +158,7 @@ const UiElements = () => {
             </UiGroup>
           </div>
           <div className='flex p-[2px] bg-black/50 w-50 text-white'>
-            <div className='bg-blue-950/50  border-blue-900/50 border-2 p-1 w-full flex-1'>
+            <div className='bg-lime-700/50  border-lime-400/50 border-2 p-1 w-full flex-1'>
               <Tooltip
                 className='w-full'
                 text={
@@ -186,10 +196,14 @@ const UiElements = () => {
         </div>
         <div className='flex flex-row gap-2'>
           <div className='flex flex-row p-[2px] gap-[2px] bg-black/70'>
-            <UiGroup title='Create character'>
-              <div className='flex flex-row gap-2 p-1'>
+            <UiGroup title='Create character' ornament>
+              <div className='flex flex-row gap-[2px] md:gap-2 p-[2px] md:p-1'>
                 {Object.entries(charactersStats).map(([name, stats]) => (
-                  <Tooltip text={'$' + stats.money} key={name}>
+                  <Tooltip
+                    text={'$' + stats.money}
+                    key={name}
+                    characterStats={stats}
+                  >
                     <Button
                       disabled={stats.money > playerMoney}
                       onClick={() =>
@@ -202,10 +216,14 @@ const UiElements = () => {
                 ))}
               </div>
             </UiGroup>
-            <UiGroup title='Create turret'>
-              <div className='flex flex-row gap-2 p-1'>
+            <UiGroup title='Create turret' ornament>
+              <div className='flex flex-row gap-[2px] md:gap-2 p-[2px] md:p-1'>
                 {Object.entries(turretStats).map(([name, stats]) => (
-                  <Tooltip text={'$' + stats.price} key={name}>
+                  <Tooltip
+                    text={'$' + stats.price}
+                    key={name}
+                    turretStats={stats}
+                  >
                     <Button
                       key={name}
                       disabled={stats.price > playerMoney}
@@ -221,60 +239,6 @@ const UiElements = () => {
             </UiGroup>
           </div>
         </div>
-        {/*<div className='flex flex-row p-[2px] gap-[2px] bg-black/70'>
-          <div className='flex flex-col'>
-            <div className='bg-red-950 relative'>
-              <div className='p-1 absolute w-full h-full'>
-                <div className='bg-[url(https://typographyfall2017.wordpress.com/wp-content/uploads/2017/11/bodoni-ornaments-c2a3-modified-03.png)] w-full h-full bg-contain bg-no-repeat bg-right opacity-20'></div>
-              </div>
-              <p className='text-sm px-5 py-1 font-bold text-red-400'>
-                Create character
-              </p>
-            </div>
-            <div className='bg-red-950/50 max-w-min p-[2px] text-black border-red-950 border-2'>
-              <div className='flex flex-row gap-2 p-1'>
-                {Object.entries(charactersStats).map(([name, stats]) => (
-                  <button
-                    key={name}
-                    type='button'
-                    className='h-12 px-6 bg-red-900 text-white relative text-sm'
-                    onClick={() =>
-                      handleCreateEnemyCharacter(name as CharacterType)
-                    }
-                  >
-                    {name}:<br />{' '}
-                    <span className='font-bold'>${stats.money}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className='flex flex-col'>
-            <div className='bg-red-950 relative'>
-              <div className='p-1 absolute w-full h-full'>
-                <div className='bg-[url(https://typographyfall2017.wordpress.com/wp-content/uploads/2017/11/bodoni-ornaments-c2a3-modified-03.png)] w-full h-full bg-contain bg-no-repeat bg-right opacity-20'></div>
-              </div>
-              <p className='text-sm px-5 py-1 font-bold text-red-400'>
-                Create turret
-              </p>
-            </div>
-            <div className='bg-red-950/50 max-w-min p-[2px] text-black border-red-950 border-2'>
-              <div className='flex flex-row gap-2 p-1'>
-                {Object.entries(turretStats).map(([name, stats]) => (
-                  <button
-                    key={name}
-                    type='button'
-                    className='h-12 px-6 bg-red-900 text-white relative text-sm'
-                    onClick={() => handleCreateEnemyTurret(name as TurretType)}
-                  >
-                    {name}:<br />
-                    <span className='font-bold'>${stats.price}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>*/}
       </div>
     </>
   );

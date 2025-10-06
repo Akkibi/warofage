@@ -33,9 +33,7 @@ export interface CharacterStatsType {
 
 export type CharacterType = 'Tank' | 'Assassin' | 'Archer' | 'Mage' | 'Bruiser';
 
-export type CharacterListStatsType = {
-  [key in CharacterType]: CharacterStatsType;
-};
+export type CharacterListStatsType = Record<CharacterType, CharacterStatsType>;
 
 export type TurretType = 'Simple' | 'Double' | 'Explosive';
 
@@ -46,6 +44,4 @@ export interface TurretStatsType {
   speed: number;
 }
 
-export type TurretListStatsType = {
-  [key in TurretType]: TurretStatsType;
-};
+export type TurretListStatsType = Record<TurretType, TurretStatsType>;

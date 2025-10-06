@@ -12,7 +12,7 @@ import type { CharacterStatsType, CharacterType, Era } from '../types';
 
 const bounds = { minx: -5.5, maxx: 4.9, miny: -0.5, maxy: 0.5 };
 const boundsEnemy = { minx: -4.9, maxx: 5.5, miny: -0.5, maxy: 0.5 };
-const speedMultiplier = 0.005;
+const speedMultiplier = 0.006;
 
 export class Character {
   private randomFightDelay: number;
@@ -82,7 +82,7 @@ export class Character {
     this.randomFightDelay = 0;
     this.isHover = false;
 
-    this.color = new THREE.Color(isAlly ? 0x0000ff : 0xff0000);
+    this.color = new THREE.Color(isAlly ? 0x00b8db : 0xf6339a);
     // slight change in tint depending on era
     if (isAlly) {
       this.color = this.color.lerp(

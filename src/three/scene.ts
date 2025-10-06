@@ -50,7 +50,7 @@ export class SceneManager {
     this.scene.add(ambientLight);
     // sun light
 
-    const sunLight = new THREE.DirectionalLight(0xffffee, 2);
+    const sunLight = new THREE.DirectionalLight(0xffffee, 4);
     sunLight.position.set(1, 1, -1);
     sunLight.lookAt(new THREE.Vector3(0, 0, 0));
     sunLight.castShadow = true;

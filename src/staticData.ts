@@ -32,49 +32,49 @@ export const turretStats: TurretListStatsType = {
 export const charactersStats: CharacterListStatsType = {
   Assassin: {
     size: 0.04,
-    health: 40, // reduced from 70
-    attack: 20, // reduced from 40
+    health: 40,
+    attack: 20,
     attackSpeed: 5.0,
     attackRange: 0.16,
-    defense: 5, // reduced from 10
+    defense: 5,
     speed: 10,
-    xp: 80, // reduced from 120
-    money: 60, // reduced from 100
+    xp: 80,
+    money: 60,
     isDistance: false,
     quantity: 5, // spawns in groups of 5
   },
   Archer: {
     size: 0.05,
-    health: 40, // reduced from 120
-    attack: 12, // reduced from 15
+    health: 40,
+    attack: 12,
     attackSpeed: 1.6,
     attackRange: 1,
-    defense: 15, // reduced from 20
+    defense: 15,
     speed: 6,
-    xp: 70, // reduced from 90
-    money: 100, // reduced from 150
+    xp: 70,
+    money: 100,
     isDistance: true,
     quantity: 3, // spawns in groups of 3
   },
   Bruiser: {
     size: 0.1,
-    health: 150, // reduced from 200
-    attack: 35, // reduced from 45
+    health: 150,
+    attack: 35,
     attackSpeed: 2.5,
     attackRange: 0.25,
-    defense: 30, // reduced from 40
+    defense: 30,
     speed: 4,
-    xp: 90, // reduced from 110
-    money: 130, // reduced from 180
+    xp: 90,
+    money: 130,
     isDistance: false,
     quantity: 2, // spawns in pairs
   },
   Mage: {
     size: 0.05,
-    health: 100,
+    health: 150,
     attack: 60,
     attackSpeed: 2.5,
-    attackRange: 0.4,
+    attackRange: 0.5,
     defense: 15,
     speed: 5,
     xp: 140,
