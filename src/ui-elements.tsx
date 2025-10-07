@@ -60,6 +60,8 @@ const UiElements = () => {
   };
   return (
     <>
+      <div className='absolute top-0 left-0 right-0 w-full h-[5vh] bg-[url(/bands2.png)] mix-blend-multiply rotate-180'></div>
+      <div className='absolute bottom-0 left-0 right-0 w-full h-[5vh] bg-[url(/bands2.png)] mix-blend-multiply'></div>
       <div className='bottom-0 left-0 h-full w-full bg-[url(/boundstexture.png)] absolute z-0 bg-no-repeat bg-cover inset-0 select-none pointer-events-none mix-blend-multiply opacity-50 bg-center'></div>
       <div className='bottom-0 left-0 h-[25vh] w-[25vh] bg-[url(/corner.svg)] absolute z-0 bg-no-repeat bg-cover select-none pointer-events-none'></div>
       <div className='absolute top-14 lg:top-25 right-1 lg:right-5 bg-black/70 h-fit p-[2px] w-fit'>
@@ -133,8 +135,8 @@ const UiElements = () => {
             ></div>
           </div>
         </div>
-        <div className='bg-pink-950/50 border-pink-900/50 border-2 p-1 flex-1'>
-          <div className='bg-pink-950 relative h-full flex-1'>
+        <div className='bg-yellow-950/50 border-yellow-900/50 border-2 p-1 flex-1'>
+          <div className='bg-yellow-950 relative h-full flex-1'>
             <span className='absolute right-1 -bottom-8 z-10 text-xs'>
               {enemyHealth} / 1000
             </span>
@@ -145,7 +147,7 @@ const UiElements = () => {
               }}
             ></div>
             <div
-              className='absolute top-0 right-0 bottom-0 w-full bg-pink-500 origin-right'
+              className='absolute top-0 right-0 bottom-0 w-full bg-yellow-500 origin-right'
               style={{
                 transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
               }}
@@ -168,7 +170,7 @@ const UiElements = () => {
             </UiGroup>
           </div>
           <div className='flex p-[2px] bg-black/50 w-50 text-white'>
-            <div className='bg-lime-700/50  border-lime-400/50 border-2 p-1 w-full flex-1'>
+            <div className='bg-purple-700/50  border-purple-400/50 border-2 p-1 w-full flex-1'>
               <Tooltip
                 className='w-full'
                 text={

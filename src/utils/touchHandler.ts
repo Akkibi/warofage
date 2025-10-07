@@ -13,6 +13,14 @@ export interface SwipeDataType {
   originalEvent: MouseEvent | TouchEvent;
 }
 
+export interface TouchMoveDataType {
+  x: number;
+  y: number;
+  deltaX: number;
+  deltaY: number;
+  originalEvent: MouseEvent | TouchEvent;
+}
+
 interface PointerStartData {
   x: number;
   y: number;
@@ -22,6 +30,7 @@ interface PointerStartData {
 export class PointerHandler {
   private config: Required<PointerHandlerConfig>;
   private pointerStart: PointerStartData | null = null;
+  private lastPosition: { x: number; y: number } | null = null;
   private element: HTMLElement;
 
   constructor(element: HTMLElement, config: PointerHandlerConfig = {}) {
@@ -40,11 +49,13 @@ export class PointerHandler {
   private init(): void {
     // Mouse events
     this.element.addEventListener('mousedown', this.handleStart);
+    this.element.addEventListener('mousemove', this.handleMove);
     this.element.addEventListener('mouseup', this.handleEnd);
     this.element.addEventListener('mouseleave', this.handleCancel);
 
     // Touch events
     this.element.addEventListener('touchstart', this.handleStart);
+    this.element.addEventListener('touchmove', this.handleMove);
     this.element.addEventListener('touchend', this.handleEnd);
     this.element.addEventListener('touchcancel', this.handleCancel);
   }
@@ -58,6 +69,40 @@ export class PointerHandler {
       y: point.y,
       time: Date.now(),
     };
+    this.lastPosition = { x: point.x, y: point.y };
+  };
+
+  private handleMove = (e: MouseEvent | TouchEvent): void => {
+    if (!this.pointerStart || !this.lastPosition) return;
+
+    const point = this.getPoint(e);
+    if (!point) return;
+
+    const deltaX = point.x - this.lastPosition.x;
+    const deltaY = point.y - this.lastPosition.y;
+
+    // Emit touchMoveX event
+    const moveDataX: TouchMoveDataType = {
+      x: point.x,
+      y: point.y,
+      deltaX,
+      deltaY: 0,
+      originalEvent: e,
+    };
+    eventEmitter.trigger('touchMoveX', [moveDataX]);
+
+    // Emit touchMoveY event
+    const moveDataY: TouchMoveDataType = {
+      x: point.x,
+      y: point.y,
+      deltaX: 0,
+      deltaY,
+      originalEvent: e,
+    };
+    eventEmitter.trigger('touchMoveY', [moveDataY]);
+
+    // Update last position
+    this.lastPosition = { x: point.x, y: point.y };
   };
 
   private handleEnd = (e: MouseEvent | TouchEvent): void => {
@@ -66,6 +111,7 @@ export class PointerHandler {
     const point = this.getPoint(e);
     if (!point) {
       this.pointerStart = null;
+      this.lastPosition = null;
       return;
     }
 
@@ -81,6 +127,7 @@ export class PointerHandler {
     ) {
       eventEmitter.trigger('tap', [e]);
       this.pointerStart = null;
+      this.lastPosition = null;
       return;
     }
 
@@ -116,10 +163,12 @@ export class PointerHandler {
     }
 
     this.pointerStart = null;
+    this.lastPosition = null;
   };
 
   private handleCancel = (): void => {
     this.pointerStart = null;
+    this.lastPosition = null;
   };
 
   private getPoint(
@@ -138,17 +187,20 @@ export class PointerHandler {
 
   public destroy(): void {
     this.element.removeEventListener('mousedown', this.handleStart);
+    this.element.removeEventListener('mousemove', this.handleMove);
     this.element.removeEventListener('mouseup', this.handleEnd);
     this.element.removeEventListener('mouseleave', this.handleCancel);
     this.element.removeEventListener('touchstart', this.handleStart);
+    this.element.removeEventListener('touchmove', this.handleMove);
     this.element.removeEventListener('touchend', this.handleEnd);
     this.element.removeEventListener('touchcancel', this.handleCancel);
     this.pointerStart = null;
+    this.lastPosition = null;
   }
 }
 
 // Usage example:
-// const handler = new PointerHandler(document.body, eventEmitter, {
+// const handler = new PointerHandler(document.body, {
 //   swipeThreshold: 50,
 //   tapMaxDuration: 300,
 //   tapMaxMovement: 10
@@ -157,3 +209,5 @@ export class PointerHandler {
 // eventEmitter.on('tap', (e) => console.log('Tap detected!', e));
 // eventEmitter.on('swipeX', (data) => console.log('Horizontal swipe:', data.direction));
 // eventEmitter.on('swipeY', (data) => console.log('Vertical swipe:', data.direction));
+// eventEmitter.on('touchMoveX', (data) => console.log('Move X:', data.x, 'Delta:', data.deltaX));
+// eventEmitter.on('touchMoveY', (data) => console.log('Move Y:', data.y, 'Delta:', data.deltaY));

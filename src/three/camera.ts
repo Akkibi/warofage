@@ -4,7 +4,7 @@ import { lerp } from 'three/src/math/MathUtils.js';
 import { eventEmitter } from '../utils/eventEmitter';
 import { useStore } from '../store';
 
-import type { SwipeDataType } from '../utils/touchHandler';
+import type { TouchMoveDataType } from '../utils/touchHandler';
 
 export class Camera {
   private static instance: Camera; // must be static
@@ -39,11 +39,11 @@ export class Camera {
       target: 0,
     };
     window.addEventListener('wheel', this.handleScroll);
-    eventEmitter.on('swipeX', this.handleSwipe);
+    eventEmitter.on('touchMoveX', this.handleTouch);
   }
 
-  private handleSwipe = (e: SwipeDataType) => {
-    this.storeScroll(e.distance * 0.01 * (e.direction === 'left' ? 1 : -1));
+  private handleTouch = (e: TouchMoveDataType) => {
+    this.storeScroll(e.deltaX * -0.01);
   };
 
   private handleScroll = (e: WheelEvent) => {

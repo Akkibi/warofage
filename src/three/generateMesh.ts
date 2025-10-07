@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 export class MeshGenerator {
-  private mesh: THREE.Mesh | null;
+  private mesh: THREE.Group | null;
   private gltfLoader: GLTFLoader;
   private group: THREE.Group;
 
@@ -16,8 +16,12 @@ export class MeshGenerator {
   public async loadModel(size: number, color: THREE.Color) {
     const url = './models/baseCharacter.glb';
     this.gltfLoader.load(url, (gltf) => {
-      const mesh = gltf.scene.children[0] as THREE.Mesh;
-      mesh.material = new THREE.MeshStandardMaterial({ color: color });
+      const mesh = gltf.scene.children[0] as THREE.Group;
+      console.log(mesh);
+      (mesh.children[0] as THREE.Mesh).material =
+        new THREE.MeshStandardMaterial({
+          color: color,
+        });
       mesh.position.y = 0;
       mesh.castShadow = true;
       mesh.scale.multiplyScalar(0.05 + size / 1.5);
@@ -32,7 +36,10 @@ export class MeshGenerator {
 
   public setColor = (color: THREE.Color) => {
     if (this.mesh) {
-      (this.mesh.material as THREE.MeshStandardMaterial).color = color;
+      (
+        (this.mesh.children[0] as THREE.Mesh)
+          .material as THREE.MeshStandardMaterial
+      ).color = color;
     }
   };
 }
