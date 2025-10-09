@@ -4,13 +4,11 @@ import { useStore } from './store';
 import type { CharacterStatsType } from './types';
 
 export class User {
-  public money: number;
   private baseDefense: number;
   protected isAlly: boolean;
 
   constructor() {
     this.isAlly = true;
-    this.money = 1000;
     this.baseDefense = 100;
 
     eventEmitter.on('character-dies', this.characterDieHandler.bind(this));
@@ -35,10 +33,7 @@ export class User {
   ) => {
     if (isAlly === this.isAlly) return;
     // console.log('character die', stats, isAlly ? 'ally' : 'enemy');
-    this.setMoney(
-      this.isAlly,
-      Math.round((stats.money / stats.quantity) * 1.1 + this.money)
-    );
+    this.addMoney(!isAlly, Math.round((stats.money / stats.quantity) * 1.1));
     this.setXp(
       Math.round(stats.xp / stats.quantity + useStore.getState().playerXp)
     );
@@ -58,6 +53,19 @@ export class User {
       useStore.setState({ playerMoney: newNumber });
     } else {
       useStore.setState({ enemyMoney: newNumber });
+    }
+  };
+
+  protected addMoney = (isAlly: boolean, newNumber: number) => {
+    if (isAlly !== this.isAlly) return;
+    if (this.isAlly) {
+      useStore.setState({
+        playerMoney: useStore.getState().playerMoney + newNumber,
+      });
+    } else {
+      useStore.setState({
+        enemyMoney: useStore.getState().enemyMoney + newNumber,
+      });
     }
   };
 
