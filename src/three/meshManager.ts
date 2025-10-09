@@ -5,26 +5,32 @@ export class MeshGenerator {
   private mesh: THREE.Group | null;
   private gltfLoader: GLTFLoader;
   private group: THREE.Group;
+  private url: string;
 
-  constructor(group: THREE.Group, size: number, color: THREE.Color) {
+  constructor(
+    group: THREE.Group,
+    size: number,
+    color: THREE.Color,
+    url: string
+  ) {
     this.group = group;
+    this.url = url;
     this.gltfLoader = new GLTFLoader();
     this.mesh = null;
     this.loadModel(size, color);
   }
 
   public async loadModel(size: number, color: THREE.Color) {
-    const url = './models/baseCharacter.glb';
-    this.gltfLoader.load(url, (gltf) => {
+    this.gltfLoader.load(this.url, (gltf) => {
       const mesh = gltf.scene.children[0] as THREE.Group;
-      console.log(mesh);
+      // console.log(mesh);
       (mesh.children[0] as THREE.Mesh).material =
         new THREE.MeshStandardMaterial({
           color: color,
         });
       mesh.position.y = 0;
       mesh.castShadow = true;
-      mesh.scale.multiplyScalar(0.05 + size / 1.5);
+      mesh.scale.multiplyScalar(size);
       this.mesh = mesh;
       this.group.add(mesh);
     });

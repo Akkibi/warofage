@@ -1,6 +1,7 @@
 import { User } from './users';
 import { eventEmitter } from './utils/eventEmitter';
 import { eraStats } from './staticData';
+import { useStore } from './store';
 
 import type { CharacterType } from './types';
 import type { Character } from './three/character';
@@ -26,18 +27,21 @@ export class Enemy extends User {
   }
 
   public tick = (deltatime: number) => {
+    const currentXp = useStore.getState().enemyXp;
+    const currentEra = useStore.getState().enemyEra;
     this.cumulativeTime += deltatime;
     const varyingPart = Math.max(
       0,
-      1 - this.xp / (eraStats[this.era + 1].xp ?? 100000)
+      1 - currentXp / (eraStats[currentEra + 1].xp ?? 100000)
     );
     const timeToGenerate =
       5000 + Math.floor(Math.random() * 3000) + 3000 * varyingPart;
 
     if (this.cumulativeTime < timeToGenerate) return;
     console.log('timeToGenerate', timeToGenerate, 3000 * varyingPart);
-    if (this.xp > (eraStats[this.era + 1].xp ?? 100000)) {
-      this.evolve();
+    if (currentXp > (eraStats[currentEra + 1].xp ?? 100000)) {
+      useStore.setState({ enemyEra: currentEra + 1 });
+      eventEmitter.trigger('evolve-enemy');
     }
     const nbCharacter = this.calculateNbOfCharactersAtSpawn();
     if (nbCharacter < 30) {
@@ -56,6 +60,9 @@ export class Enemy extends User {
   };
 
   private generateCharacter() {
+    const currentXp = useStore.getState().enemyXp;
+    const currentEra = useStore.getState().enemyEra;
+
     console.log(this.enemyCharacterList.length);
     if (this.enemyCharacterList.length >= 150) return;
     // select random character group, if xp is > to half the next xp level, generate double the amount
@@ -64,7 +71,7 @@ export class Enemy extends User {
         Math.floor(
           Math.random() *
             (characterGroups.length -
-              (this.xp > eraStats[this.era].xp / 2 ? 0 : 1))
+              (currentXp > eraStats[currentEra].xp / 2 ? 0 : 1))
         )
       ];
     console.log('characterGroup', characterGroup);

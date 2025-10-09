@@ -39,9 +39,9 @@ export const charactersStats: CharacterListStatsType = {
     defense: 5,
     speed: 10,
     xp: 80,
-    money: 60,
+    money: 70,
     isDistance: false,
-    quantity: 5, // spawns in groups of 5
+    quantity: 4, // spawns in groups of 5
   },
   Archer: {
     size: 0.05,

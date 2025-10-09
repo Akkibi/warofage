@@ -118,9 +118,9 @@ const UiElements = () => {
       <div className='absolute top-1 right-1 left-1 lg:top-5 lg:left-5 lg:right-5 flex flex-rox gap-[2px] p-[2px] h-6 lg:h-10 bg-black/50'>
         <div className='bg-cyan-950/50 border-cyan-900/50 border-2 p-1 flex-1'>
           <div className='bg-cyan-950 relative h-full flex-1'>
-            <span className='absolute left-1 -bottom-8 z-10 text-xs'>
+            <b className='absolute right-2 top-1 z-10 text-xs text-cyan-500 mix-blend-difference'>
               {playerHealth} / 1000
-            </span>
+            </b>
             <div
               className='absolute top-0 right-0 bottom-0 w-full bg-white origin-left transition-all duration-75 ease-out'
               style={{
@@ -135,11 +135,11 @@ const UiElements = () => {
             ></div>
           </div>
         </div>
-        <div className='bg-yellow-950/50 border-yellow-900/50 border-2 p-1 flex-1'>
-          <div className='bg-yellow-950 relative h-full flex-1'>
-            <span className='absolute right-1 -bottom-8 z-10 text-xs'>
+        <div className='bg-amber-950/50 border-amber-900/50 border-2 p-1 flex-1 flex gap-1'>
+          <div className='bg-amber-950 relative h-full flex-1'>
+            <b className='absolute left-2 top-1 z-10 text-xs text-amber-500 mix-blend-difference'>
               {enemyHealth} / 1000
-            </span>
+            </b>
             <div
               className='absolute top-0 right-0 bottom-0 w-full bg-white origin-right transition-all duration-75 ease-out'
               style={{
@@ -147,7 +147,7 @@ const UiElements = () => {
               }}
             ></div>
             <div
-              className='absolute top-0 right-0 bottom-0 w-full bg-yellow-500 origin-right'
+              className='absolute top-0 right-0 bottom-0 w-full bg-amber-500 origin-right'
               style={{
                 transform: `scaleX(${Math.max(enemyHealth / 1000, 0)})`,
               }}

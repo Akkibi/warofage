@@ -5,13 +5,26 @@ import { eventEmitter } from '../utils/eventEmitter';
 
 import type { Era } from '../types';
 
+interface EnvironementMeshType {
+  ally: Record<Era, string>;
+  enemy: Record<Era, string>;
+}
 // states of history ages
-const environementMesh: Record<Era, string> = {
-  'Stone Age': '/models/environement/stone_age2.glb',
-  'Iron Age': '/models/environement/iron_age.glb',
-  'Medieval Era': '/models/environement/medieval_era.glb',
-  'Modern Era': '/models/environement/modern_era.glb',
-  'Post Modern Era': '/models/environement/post_modern_era.glb',
+const environementMesh: EnvironementMeshType = {
+  ally: {
+    'Stone Age': '/models/environement/ally/terrainBase.glb',
+    'Iron Age': '/models/environement/iron_age.glb',
+    'Medieval Era': '/models/environement/medieval_era.glb',
+    'Modern Era': '/models/environement/modern_era.glb',
+    'Post Modern Era': '/models/environement/post_modern_era.glb',
+  },
+  enemy: {
+    'Stone Age': '/models/environement/enemy/terrainBase.glb',
+    'Iron Age': '/models/environement/iron_age.glb',
+    'Medieval Era': '/models/environement/medieval_era.glb',
+    'Modern Era': '/models/environement/modern_era.glb',
+    'Post Modern Era': '/models/environement/post_modern_era.glb',
+  },
 };
 
 // base is the respresantation of a clan in the game can have 3 types of building state
@@ -30,7 +43,7 @@ export class Base {
     this.baseGroup = new THREE.Group();
     this.scene.add(this.baseGroup);
     this.baseGroup.scale.multiplyScalar(0.5);
-    this.baseGroup.scale.x *= isAlly ? -1 : 1;
+
     this.era = 'Stone Age';
     this.loader = new GLTFLoader();
 
@@ -50,7 +63,7 @@ export class Base {
       this.mesh = null;
     }
 
-    const path = environementMesh[this.era];
+    const path = environementMesh[isAlly ? 'ally' : 'enemy'][this.era];
     this.loader.load(
       path,
       (gltf) => {

@@ -5,18 +5,12 @@ import type { CharacterStatsType } from './types';
 
 export class User {
   public money: number;
-  public xp: number;
-  public health: number;
-  public era: number;
   private baseDefense: number;
   protected isAlly: boolean;
 
   constructor() {
     this.isAlly = true;
     this.money = 1000;
-    this.xp = 0;
-    this.health = 1000;
-    this.era = 0;
     this.baseDefense = 100;
 
     eventEmitter.on('character-dies', this.characterDieHandler.bind(this));
@@ -24,22 +18,14 @@ export class User {
     eventEmitter.on('spend-money', this.setMoney.bind(this));
   }
 
-  protected evolve = () => {
-    if (this.isAlly) {
-      useStore.setState({ playerEra: this.era + 1 });
-    } else {
-      useStore.setState({ enemyEra: this.era + 1 });
-    }
-    this.era++;
-    this.baseDefense = 100 + this.era * 10;
-  };
-
   private handleHitBase = (isAlly: boolean, damage: number) => {
     if (isAlly !== this.isAlly) return;
-    if (this.health <= 0) return;
-    this.setHealth(
-      this.health -
-        Math.max(1, Math.floor((damage * 100) / (100 + this.baseDefense)))
+    const era = useStore.getState().playerEra;
+    this.updateHealth(
+      -Math.max(
+        1,
+        Math.floor((damage * 100) / (100 + this.baseDefense * (era * 0.1 + 1)))
+      )
     );
   };
 
@@ -53,34 +39,47 @@ export class User {
       this.isAlly,
       Math.round((stats.money / stats.quantity) * 1.1 + this.money)
     );
-    this.setXp(Math.round(stats.xp / stats.quantity + this.xp));
+    this.setXp(
+      Math.round(stats.xp / stats.quantity + useStore.getState().playerXp)
+    );
   };
 
   protected setXp = (newNumber: number) => {
-    this.xp = newNumber;
     if (this.isAlly) {
-      useStore.setState({ playerXp: this.xp });
+      useStore.setState({ playerXp: newNumber });
     } else {
-      useStore.setState({ enemyXp: this.xp });
+      useStore.setState({ enemyXp: newNumber });
     }
   };
 
   protected setMoney = (isAlly: boolean, newNumber: number) => {
     if (isAlly !== this.isAlly) return;
-    this.money = newNumber;
     if (this.isAlly) {
-      useStore.setState({ playerMoney: this.money });
+      useStore.setState({ playerMoney: newNumber });
     } else {
-      useStore.setState({ enemyMoney: this.money });
+      useStore.setState({ enemyMoney: newNumber });
     }
   };
 
   protected setHealth = (newNumber: number) => {
-    this.health = newNumber;
     if (this.isAlly) {
-      useStore.setState({ playerHealth: this.health });
+      if (useStore.getState().playerHealth <= 0) return;
+      useStore.setState({ playerHealth: newNumber });
     } else {
-      useStore.setState({ enemyHealth: this.health });
+      if (useStore.getState().enemyHealth <= 0) return;
+      useStore.setState({ enemyHealth: newNumber });
     }
   };
+
+  protected updateHealth(delta: number) {
+    if (this.isAlly) {
+      useStore.setState({
+        playerHealth: useStore.getState().playerHealth + delta,
+      });
+    } else {
+      useStore.setState({
+        enemyHealth: useStore.getState().enemyHealth + delta,
+      });
+    }
+  }
 }

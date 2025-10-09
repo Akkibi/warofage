@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
+import Stats from 'stats.js';
 
 import { Camera } from './camera';
 import { Base } from './base';
@@ -7,10 +8,12 @@ import { CharacterManager } from './characterManager';
 import { TurretManager } from './turretManager';
 import { useStore } from '../store';
 import { PointerHandler } from '../utils/touchHandler';
+import { GltfMeshLoader } from '../utils/meshLoader';
 // import { RaycastManager } from './raycastManager';
 
 export class SceneManager {
   private static instance: SceneManager;
+  private stats: Stats;
   private canvas: HTMLDivElement | null;
   private scene: THREE.Scene;
   private camera: Camera;
@@ -22,6 +25,11 @@ export class SceneManager {
   // private rayCastManager: RaycastManager;
 
   private constructor(canvas: HTMLDivElement) {
+    //stats
+    this.stats = new Stats();
+    this.stats.showPanel(0);
+    document.body.appendChild(this.stats.dom);
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x80abd2);
     this.camera = Camera.getInstance();
@@ -29,6 +37,8 @@ export class SceneManager {
     //   this.scene,
     //   this.camera.getCamera()
     // );
+
+    // pointer
     this.pointerHandler = new PointerHandler(canvas, {
       swipeThreshold: 50,
       tapMaxDuration: 300,
@@ -48,6 +58,12 @@ export class SceneManager {
     const enemy = new Base(this.scene, false);
     this.bases.push(ally, enemy);
 
+    const gltfMeshLoader = GltfMeshLoader.getInstance();
+    gltfMeshLoader
+      .loadModel('./models/environement/terrainBase.glb', this.scene)
+      .then((mesh) => {
+        mesh.scale.multiplyScalar(0.5);
+      });
     this.scene.add(this.camera.getCameraGroup());
 
     this.renderer = new THREE.WebGLRenderer();
@@ -113,12 +129,14 @@ export class SceneManager {
   }
 
   private animate(deltatime: number) {
+    this.stats.begin();
     if (useStore.getState().isGamePaused) return;
     const deltaTime = deltatime * 2.0;
     // put per-frame logic here (object updates, controls, etc.)
     // this.renderer.render(this.scene, this.camera.getCamera());
     this.characterManager.update(deltaTime);
     this.turretManager.update(deltaTime);
+    this.stats.end();
   }
 
   public getScene(): THREE.Scene {

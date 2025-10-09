@@ -6,7 +6,7 @@ import { useStore } from '../store';
 import { HealthBar } from './healthBar';
 import { eventEmitter } from '../utils/eventEmitter';
 import { charactersStats } from '../staticData';
-import { MeshGenerator } from './generateMesh';
+import { MeshGenerator } from './meshManager';
 
 import type { CharacterStatsType, CharacterType, Era } from '../types';
 
@@ -97,10 +97,13 @@ export class Character {
     }
 
     this.meshGroup = new THREE.Group();
+    const meshSize =
+      0.05 + (this.stats.size * (useStore.getState().playerEra + 1)) / 1.5;
     this.meshManager = new MeshGenerator(
       this.meshGroup,
-      this.stats.size,
-      this.color
+      meshSize,
+      this.color,
+      './models/baseCharacter.glb'
     );
     this.meshGroup.name = this.type;
 
