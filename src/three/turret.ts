@@ -26,7 +26,7 @@ export class Turret {
   private isAlly: boolean;
   private cumulativeTime: number;
   private scene: THREE.Scene;
-  private rangeIndicator: THREE.PolarGridHelper;
+  // private rangeIndicator: THREE.PolarGridHelper;
   private closestEnemy: EnemyTargetFinderType | null;
   private cumulativeActionTime: number;
 
@@ -80,14 +80,14 @@ export class Turret {
     this.group.add(lineHelper);
 
     // range indicator
-    this.rangeIndicator = new THREE.PolarGridHelper(
-      this.stats.range,
-      1,
-      1,
-      64,
-      0xffffff,
-      0xffffff
-    );
+    // this.rangeIndicator = new THREE.PolarGridHelper(
+    //   this.stats.range,
+    //   1,
+    //   1,
+    //   64,
+    //   0xffffff,
+    //   0xffffff
+    // );
     // this.rangeIndicator.position.copy(this.positionReference.position);
     // const rangeMaterial = this.rangeIndicator
     //   .material as THREE.MeshBasicMaterial;
