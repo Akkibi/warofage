@@ -28,7 +28,11 @@ export class SceneManager {
     //stats
     this.stats = new Stats();
     this.stats.showPanel(0);
-    document.body.appendChild(this.stats.dom);
+    const statsDom = document.getElementById('stats-position');
+    requestAnimationFrame(() => {
+      this.stats.dom.style.position = 'relative';
+      statsDom?.appendChild(this.stats.dom);
+    });
 
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x80abd2);

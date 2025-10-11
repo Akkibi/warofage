@@ -71,8 +71,8 @@ export const Tooltip = ({
   return (
     <div className={cn('relative group', className)} ref={tooltipRef}>
       {characterStats && show && (
-        <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-14 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none'>
-          <div className='bg-black/50 p-2'>
+        <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-14 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none rounded-lg'>
+          <div className='bg-black/50 p-2 rounded-sm'>
             {statsRow('Health', characterStats.health / 500)}
             {statsRow('Price', characterStats.money / 350)}
             {statsRow('Attack damage', characterStats.attack / 60)}
@@ -82,8 +82,8 @@ export const Tooltip = ({
         </div>
       )}
       {turretStats && show && (
-        <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-14 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none'>
-          <div className='bg-black/50 p-2'>
+        <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-14 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none rounded-lg'>
+          <div className='bg-black/50 p-2 rounded-lg'>
             {statsRow('Price', turretStats.price / 8000)}
             {statsRow('Attack damage', turretStats.attack / 350)}
             {statsRow('Attack speed', turretStats.speed / 4)}
@@ -91,8 +91,8 @@ export const Tooltip = ({
           </div>
         </div>
       )}
-      <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-2 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none'>
-        <div className='bg-black/50 p-2'>
+      <div className='absolute z-20 bottom-full left-1/2 -translate-x-1/2 -translate-y-2 w-fit h-fit bg-black/50 p-[2px] text-nowrap opacity-0 group-hover:opacity-100 duration-100 ease-out transition-all select-none pointer-events-none rounded-lg'>
+        <div className='bg-black/50 p-2 rounded-lg'>
           <p className='text-sm font-bold text-white w-full text-center'>
             {text}
           </p>

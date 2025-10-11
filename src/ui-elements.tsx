@@ -56,6 +56,10 @@ const UiElements = () => {
           <div className='flex flex-col gap-1 p-1'>
             <FullscreenButton className='w-full' />
             <PauseButton className='w-full' />
+            <div
+              id='stats-position'
+              className='w-full h-10 bg-purple-950 rounded-lg overflow-clip'
+            ></div>
           </div>
         </UiGroup>
       </div>
@@ -125,9 +129,9 @@ const UiElements = () => {
         </div>
       </div>
       <ButtonCharacters />
-      <div className=' absolute bottom-1 left-1 lg:bottom-5 lg:left-72 flex flex-col gap-1'>
+      <div className=' absolute bottom-5 left-60 lg:bottom-5 lg:left-72 flex flex-row-reverse lg:flex-col gap-1 items-end'>
         <div className='flex flex-row gap-1'>
-          <div className='flex p-[2px] bg-black/50 w-50 text-white rounded-lg'>
+          <div className='flex p-[2px] bg-black/50 w-50 text-white rounded-lg h-fit'>
             <div className='bg-purple-700/50  border-purple-400 border-2 p-1 w-full flex-1 rounded-lg'>
               <Tooltip
                 className='w-full'

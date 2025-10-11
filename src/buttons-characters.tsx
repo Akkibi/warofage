@@ -22,7 +22,7 @@ const handleCreateCharacter = (
 
 export const ButtonCharacters = () => {
   return (
-    <div className='absolute bottom-5 left-5 z-20 rotate-45'>
+    <div className='absolute bottom-3 left-3 z-20 rotate-45'>
       <div className='flex flex-row w-full justify-center h-fit'>
         <IndividualButton name='Assassin'>Assasin</IndividualButton>
       </div>
