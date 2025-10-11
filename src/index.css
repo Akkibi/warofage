@@ -30,6 +30,12 @@ body {
     width: 100%;
     height: 100%;
 }
+canvas{
+    /* pixelize */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
 
 #threeContainer{
     position: absolute;

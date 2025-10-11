@@ -71,7 +71,11 @@ export class Turret {
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, 0, this.stats.range),
       ]),
-      new THREE.LineBasicMaterial({ color: 0x00ff00 })
+      new THREE.LineBasicMaterial({
+        color: 0xff0000,
+        transparent: true,
+        opacity: 0.25,
+      })
     );
     this.group.add(lineHelper);
 
@@ -81,15 +85,15 @@ export class Turret {
       1,
       1,
       64,
-      0x00ff00,
-      0x00ff00
+      0xffffff,
+      0xffffff
     );
-    this.rangeIndicator.position.copy(this.positionReference.position);
-    const rangeMaterial = this.rangeIndicator
-      .material as THREE.MeshBasicMaterial;
-    rangeMaterial.transparent = true;
-    rangeMaterial.opacity = 0.5;
-    this.scene.add(this.rangeIndicator);
+    // this.rangeIndicator.position.copy(this.positionReference.position);
+    // const rangeMaterial = this.rangeIndicator
+    //   .material as THREE.MeshBasicMaterial;
+    // rangeMaterial.transparent = true;
+    // rangeMaterial.opacity = 0.25;
+    // this.scene.add(this.rangeIndicator);
 
     // turret holder
     const turretHolder = new THREE.Mesh(

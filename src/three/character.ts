@@ -98,7 +98,7 @@ export class Character {
 
     this.meshGroup = new THREE.Group();
     const meshSize =
-      0.05 + (this.stats.size * (useStore.getState().playerEra + 1)) / 1.5;
+      0.1 + (this.stats.size * (useStore.getState().playerEra + 1)) / 1.5;
     this.meshManager = new MeshGenerator(
       this.meshGroup,
       meshSize,
@@ -124,15 +124,15 @@ export class Character {
       1,
       1,
       16,
-      0x0000ff,
-      0x0000ff
+      0x000000,
+      0x000000
     );
-    this.sizeIndicator.position.y = 0.01;
+    this.sizeIndicator.position.y = 0;
     this.sizeIndicator.position.z = 0;
     this.characterObject.add(this.sizeIndicator);
     const sizeMaterial = this.sizeIndicator.material as THREE.MeshBasicMaterial;
     sizeMaterial.transparent = true;
-    sizeMaterial.opacity = 0;
+    sizeMaterial.opacity = 0.1;
 
     // attack range indicator
     this.attackSizeIndicator = new THREE.PolarGridHelper(
@@ -140,8 +140,8 @@ export class Character {
       1,
       1,
       32,
-      0xff0000,
-      0xff0000
+      0xffffff,
+      0xffffff
     );
     this.attackSizeIndicator.position.y = 0.01;
     this.attackSizeIndicator.position.z = 0;
@@ -149,7 +149,7 @@ export class Character {
     const rangeMaterial = this.attackSizeIndicator
       .material as THREE.MeshBasicMaterial;
     rangeMaterial.transparent = true;
-    rangeMaterial.opacity = 0;
+    rangeMaterial.opacity = 0.05;
 
     // add health bar
     this.healthBar = new HealthBar(this.scene, this);

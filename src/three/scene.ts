@@ -122,8 +122,8 @@ export class SceneManager {
   }
 
   private init(canvas: HTMLDivElement) {
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio * 0.25);
+    this.renderer.setSize(window.innerWidth, window.innerHeight, false);
     this.renderer.setClearColor(0x000000, 1);
     canvas.appendChild(this.renderer.domElement);
   }

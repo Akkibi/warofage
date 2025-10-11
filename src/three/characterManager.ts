@@ -30,10 +30,6 @@ export class CharacterManager {
       'create-character',
       (type: CharacterType, isAlly: boolean) => this.addCharacter(type, isAlly)
     );
-
-    for (let i = 0; i < 10; i++) {
-      this.addCharacter('Assassin', true);
-    }
   }
 
   public static getInstance(scene: THREE.Scene) {

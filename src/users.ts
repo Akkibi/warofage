@@ -13,7 +13,7 @@ export class User {
 
     eventEmitter.on('character-dies', this.characterDieHandler.bind(this));
     eventEmitter.on('hit-base', this.handleHitBase.bind(this));
-    eventEmitter.on('spend-money', this.setMoney.bind(this));
+    eventEmitter.on('update-player-money', this.addMoney.bind(this));
   }
 
   private handleHitBase = (isAlly: boolean, damage: number) => {

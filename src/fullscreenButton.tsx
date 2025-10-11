@@ -19,7 +19,7 @@ export const FullscreenButton = ({ className }: { className?: string }) => {
       <button
         type='button'
         className={cn(
-          'h-10 w-10 bg-black text-white flex justify-center items-center',
+          'h-10 w-10 bg-black text-white flex justify-center items-center rounded-lg',
           className
         )}
         onClick={handleFullscren}

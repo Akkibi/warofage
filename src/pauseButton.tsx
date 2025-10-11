@@ -1,6 +1,3 @@
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
-
 import { cn } from './utils/cn';
 import { useStore } from './store';
 
@@ -8,21 +5,21 @@ export const PauseButton = ({ className }: { className?: string }) => {
   const setIsGamePaused = useStore((s) => s.setIsGamePaused);
   const isPaused = useStore((s) => s.isGamePaused);
 
-  useEffect(() => {
-    if (isPaused) {
-      gsap.globalTimeline.pause();
-    } else {
-      gsap.globalTimeline.play();
-    }
-    console.log('isPaused', isPaused, gsap.globalTimeline.paused());
-  }, [isPaused]);
+  // useEffect(() => {
+  //   if (isPaused) {
+  //     gsap.globalTimeline.pause();
+  //   } else {
+  //     gsap.globalTimeline.play();
+  //   }
+  //   console.log('isPaused', isPaused, gsap.globalTimeline.paused());
+  // }, [isPaused]);
 
   return (
     <>
       <button
         type='button'
         className={cn(
-          'h-10 w-10 bg-black text-white flex justify-center items-center',
+          'h-10 w-10 bg-black text-white flex justify-center items-center rounded-lg',
           className
         )}
         onClick={() => setIsGamePaused(!isPaused)}
